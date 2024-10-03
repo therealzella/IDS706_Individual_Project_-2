@@ -75,3 +75,7 @@ This project utilizes GitHub Actions for continuous integration and deployment, 
         - Installation of dependencies via make install.
         - Linting with flake8 to maintain code quality.
         - Running unit tests with pytest.
+
+## CRUD Operations
+This project includes the test for CRUD operations by running different SQL commands. The process is running successfully in the terminal, and here's the screenshot for the terminal:
+![Screenshot of Database Operations](https://github.com/therealzella/IDS706_Python_Script_interacting_with_SQL_Database/blob/main/Screenshot 2024-10-03 at 15.12.30.png)

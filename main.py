@@ -1,44 +1,35 @@
 import sqlite3
-import os
 
 def connect_to_db(db_name="test.db"):
-    """
-    Connect to an SQLite database.
-    """
-    try:
-        conn = sqlite3.connect(db_name)
-        print(f"Connected to the database: {db_name}")
-        return conn
-    except Exception as e:
-        print(f"Failed to connect to the database. Error: {e}")
-        return None
+    conn = sqlite3.connect(db_name)
+    return conn
 
 def create_table(conn):
-    """
-    Create a users table if it doesn't exist.
-    """
-    try:
-        cursor = conn.cursor()
-        cursor.execute('''CREATE TABLE IF NOT EXISTS users (
-                            id INTEGER PRIMARY KEY,
-                            name TEXT NOT NULL,
-                            age INTEGER)''')
-        conn.commit()
-        print("Table 'users' created successfully.")
-    except Exception as e:
-        print(f"Failed to create table. Error: {e}")
+    cursor = conn.cursor()
+    cursor.execute('''CREATE TABLE IF NOT EXISTS users (
+                         id INTEGER PRIMARY KEY,
+                         name TEXT NOT NULL,
+                         age INTEGER)''')
+    conn.commit()
 
-if __name__ == "__main__":
-    # Print the current working directory
-    print(f"Current working directory: {os.getcwd()}")
+def insert_user(conn, name, age):
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO users (name, age) VALUES (?, ?)", (name, age))
+    conn.commit()
 
-    # Connect to the database and create a table
-    conn = connect_to_db()
-    
-    if conn:
-        create_table(conn)
-        conn.close()
-        print(f"Connection to the database is closed. Check if the file 'test.db' exists.")
-    else:
-        print("No connection to the database could be established.")
+def read_users(conn):
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM users")
+    return cursor.fetchall()
+
+def update_user(conn, user_id, new_name):
+    cursor = conn.cursor()
+    cursor.execute("UPDATE users SET name = ? WHERE id = ?", (new_name, user_id))
+    conn.commit()
+
+def delete_user(conn, user_id):
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM users WHERE id = ?", (user_id,))
+    conn.commit()
+
 

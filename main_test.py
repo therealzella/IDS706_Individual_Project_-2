@@ -1,22 +1,62 @@
-import unittest
-from main import factorial
+import pytest
+import sqlite3
+from main import connect_to_db, create_table, insert_user, read_users, update_user, delete_user
 
-class TestFactorialFunction(unittest.TestCase):
-    def test_factorial_of_zero(self):
-        self.assertEqual(factorial(0), 1)
+@pytest.fixture
+def db_conn():
+    # This fixture sets up an in-memory SQLite database for testing purposes
+    conn = sqlite3.connect(':memory:')  # Using an in-memory database for testing
+    create_table(conn)
+    yield conn
+    conn.close()
 
-    def test_factorial_of_one(self):
-        self.assertEqual(factorial(1), 1)
+def test_create_table(db_conn):
+    """
+    Test that the users table is created successfully.
+    """
+    cursor = db_conn.cursor()
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='users';")
+    assert cursor.fetchone() is not None, "Table creation failed."
 
-    def test_factorial_of_positive_number(self):
-        self.assertEqual(factorial(5), 120)
+def test_insert_user(db_conn):
+    """
+    Test that a user can be inserted successfully.
+    """
+    insert_user(db_conn, "Test User", 25)
+    users = read_users(db_conn)
+    assert len(users) == 1
+    assert users[0][1] == "Test User"  # Checking name
+    assert users[0][2] == 25           # Checking age
 
-    def test_factorial_of_large_number(self):
-        self.assertEqual(factorial(10), 3628800)
+def test_read_users(db_conn):
+    """
+    Test that users can be read from the database.
+    """
+    insert_user(db_conn, "Alice", 30)
+    insert_user(db_conn, "Bob", 35)
+    users = read_users(db_conn)
+    assert len(users) == 2
+    assert users[0][1] == "Alice"
+    assert users[1][1] == "Bob"
 
-    def test_factorial_of_negative_number(self):
-        with self.assertRaises(ValueError):
-            factorial(-1)
+def test_update_user(db_conn):
+    """
+    Test that a user's name can be updated.
+    """
+    insert_user(db_conn, "Charlie", 40)
+    users = read_users(db_conn)
+    user_id = users[0][0]  # Get the ID of the first user
+    update_user(db_conn, user_id, "Charles")
+    updated_users = read_users(db_conn)
+    assert updated_users[0][1] == "Charles", "User update failed."
 
-if __name__ == "__main__":
-    unittest.main()
+def test_delete_user(db_conn):
+    """
+    Test that a user can be deleted from the database.
+    """
+    insert_user(db_conn, "David", 45)
+    users = read_users(db_conn)
+    user_id = users[0][0]  # Get the ID of the first user
+    delete_user(db_conn, user_id)
+    remaining_users = read_users(db_conn)
+    assert len(remaining_users) == 0, "User deletion failed."

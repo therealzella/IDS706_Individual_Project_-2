@@ -1,0 +1,30 @@
+name: Optimize and Build Release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+
+    - name: Build release
+      run: cargo build --release
+
+    - name: Upload release artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: optimized-rust-binary
+        path: target/release/IDS706_Individual_Project_-2

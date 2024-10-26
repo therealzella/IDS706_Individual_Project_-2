@@ -1,0 +1,9 @@
+[package]
+name = "IDS706_Individual_Project_-2"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+rusqlite = "0.26.2"
+clap = "4.0"  # For CLI argument parsing
+

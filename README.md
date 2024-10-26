@@ -8,7 +8,7 @@ This repository is for the IDS706 Individual Project #2, and the repository is b
 - **SQLite Database Integration**: Supports CRUD operations.
 - **Optimized Binary**: The project includes a GitHub Actions workflow to build and upload an optimized Rust binary.
 - **GitHub Actions**: Automated CI/CD workflow to test, build, and upload artifacts.
-- **Video Demo**: [Link to Video Demo](#) _(Add link once available)_
+- **Video Demo**: [Link to Video Demo](https://youtu.be/ggfInyxQE-4) 
 
 ## LLM Utilization
 I utilized an LLM (Language Learning Model) to assist with various stages of the project, including:
